@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button class="refresh"></button>
+    <form action="#" method="get">
+      <div class="search-field">
+        <label for="search-input"></label>
+        <input
+          type="text"
+          name="search-input"
+          id="search-input"
+          aria-label="Search for an image here"
+        />
+        <button type="submit" class="search-button">search</button>
+      </div>
+    </form>
+    <br />
+    <img src="#" />
+
+    <script>
+      // **`` GLOBAL VARIABLES ``**
+
+      let searchFor = "dogs";
+      const img = document.querySelector("img");
+
+      const refreshBtn = document.querySelector(".refresh");
+      refreshBtn.innerText = `Get a different "${searchFor}" image!`;
+
+      const searchBtn = document.querySelector(".search-button");
+      const searchInput = document.querySelector("#search-input");
+
+      // **`` EVENT LISTENERS ``**
+
+      refreshBtn.addEventListener("click", imgFetch);
+      searchBtn.addEventListener("click", searchTasks);
+
+      // **`` FUNCTION CALLS ``**
+
+      imgFetch();
+
+      // **`` FUNCTIONS ``**
+
+      function searchTasks(e) {
+        e.preventDefault();
+        searchFor = searchInput.value;
+        imgFetch();
+        refreshBtn.innerText = `Get a different "${searchFor}" image!`;
+        searchInput.value = "";
+      }
+
+      function imgFetch() {
+        fetch(
+          `https://api.giphy.com/v1/gifs/translate?api_key=3pZkUegJzvhptNesE7Mws5gMJEsmaGhc&s=${searchFor}`,
+          { mode: "cors" }
+        )
+          .then((response) => {
+            return response.json();
+          })
+          .then((response) => {
+            img.src = response.data.images.original.url;
+          })
+          .catch((error) => {
+            img.src =
+              "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmlxY3k2cjd4Y2l0MHR6aDJoeXhnMzU2OWVwOTI2anJkaTI3cTlybyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C21GGDOpKT6Z4VuXyn/giphy.gif";
+            console.error(`Error: ${error}`);
+          });
+      }
+    </script>
+  </body>
+</html>
